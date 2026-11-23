@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Configure a mobile storage cart for the ME553 design project.">
+<title>Cart Workshop | ME553</title>
+<link rel="stylesheet" href="style.css">
+<script defer src="app.js"></script>
+</head>
+<body>
+<header><div class="bar"><a class="brand" href="./"><span class="mark" aria-hidden="true">▦</span> Cart<span>Workshop</span></a><span class="project">ME553 <i></i> TEAM 3</span></div></header>
+<main>
+<div class="intro"><p class="eyebrow">MOBILE STORAGE CONFIGURATOR</p><h1>Build your cart<span>.</span></h1><p>Set up a storage cart around the equipment you move.</p></div>
+<div class="workspace">
+<section class="preview" aria-labelledby="preview-title">
+<div class="preview-head"><h2 id="preview-title">Cart preview</h2><div class="preview-actions"><button type="button" id="slide" class="light" aria-pressed="false" hidden>Slide box out</button><button type="button" id="rotate" class="light">Rotate view</button></div></div>
+<canvas id="cart" role="img" aria-label="Isometric preview of the configured mobile storage cart"></canvas>
+<div class="preview-foot"><span id="finish"></span><span>Illustrative model</span></div>
+</section>
+<section class="config" aria-label="Cart configuration">
+<div class="switch" aria-label="Configuration mode"><button id="manual-tab" aria-pressed="true" type="button">Build manually</button><button id="guided-tab" aria-pressed="false" type="button">Get a recommendation</button></div>
+<section id="manual"><h2>Configure your cart</h2><div id="choices"></div><label class="height-control" for="height">Overall height</label><select id="height"><option value="auto">Automatic for shelf layout</option><option value="42">42 in</option><option value="48">48 in</option><option value="54">54 in</option><option value="60">60 in</option></select></section>
+<form id="guided" hidden>
+<h2>Tell us what you move</h2>
+<label>How far do you move equipment?<select name="distance" required><option value="">Select a distance</option><option value="short">Within a room</option><option value="medium">Across a building</option><option value="long">Between buildings</option></select></label>
+<label>How much equipment do you move?<select name="load" required><option value="">Select a typical load</option><option value="light">Up to 100 lb</option><option value="medium">101–200 lb</option><option value="heavy">201–300 lb</option><option value="over">More than 300 lb</option></select></label>
+<label>How often do you move it?<select name="frequency" required><option value="">Select a frequency</option><option value="rare">Occasionally</option><option value="weekly">Weekly</option><option value="daily">Daily</option></select></label>
+<button class="primary" type="submit">Recommend a build</button>
+<p id="recommendation" aria-live="polite" hidden></p>
+<button class="light" id="edit" type="button" hidden>Edit this build</button>
+</form>
+</section>
+<section class="summary" aria-labelledby="summary-title"><div><p class="eyebrow">BUILD SUMMARY</p><h2 id="summary-title">Your configuration</h2></div>
+<dl id="specs" aria-live="polite"></dl><p class="note">Concept dimensions, load targets, and prices are illustrative. Shipping is excluded.</p></section>
+</div>
+</main>
+<footer>ME553 · Team 3 <span>Mobile Storage Design Project</span></footer>
+</body>
+</html>
