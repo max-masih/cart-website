@@ -1,4 +1,4 @@
-Cart Workshop | ME553 Team 3
+Super Mover | ME553 Team 3
 
 Run locally
 Unzip the archive and open index.html in a browser. The configurator

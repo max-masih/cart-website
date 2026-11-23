@@ -88,39 +88,59 @@ byId('guided').addEventListener('input', () => {
   byId('recommendation').hidden = true;
   byId('edit').hidden = true;
 });
-function recommend(distance, load, frequency) {
+const cargoProfiles = {
+  bins: { shelf: 'rails', net: 'none', ramp: 'none', reason: 'Open rails let you slide compatible bins on and off.' },
+  loose: { shelf: 'double', net: 'removable', ramp: 'none', reason: 'Two shelves organize supplies, and the netting helps contain loose items on the lower deck.' },
+  bulky: { shelf: 'cargo', net: 'none', ramp: 'none', reason: 'An open cargo deck leaves room for bulky equipment.' },
+  wheeled: { shelf: 'cargo', net: 'none', ramp: 'included', reason: 'The fold-down ramp leads directly onto the open cargo deck.' },
+  mixed: { shelf: 'single', net: 'removable', ramp: 'none', reason: 'One shelf leaves space for larger items below, with netting for loose supplies.' }
+};
+
+const wheelReasons = {
+  pneumatic: 'Pneumatic wheels suit uneven routes.',
+  locking: 'Locking casters help hold the cart in place during frequent stops or loading.',
+  swivel: 'Swivel casters help with tight turns indoors.'
+};
+
+function recommend({ cargo, load, surface, frequency, height }) {
   if (load === 'over') return null;
+  let material = 'aluminum';
+  if (load === 'heavy') material = 'steel';
+  if (load === 'light' && frequency === 'rare' && surface !== 'outdoor') material = 'wood';
+
+  let wheel = 'swivel';
+  if (load === 'heavy' || frequency === 'daily' || cargo === 'wheeled' || surface === 'indoor') {
+    wheel = 'locking';
+  }
+  if (surface === 'outdoor') wheel = 'pneumatic';
+
+  const { reason, ...layout } = cargoProfiles[cargo];
   return {
-    material: load === 'heavy' ? 'steel' : load === 'light' && frequency === 'rare' ? 'wood' : 'aluminum',
-    wheel: distance === 'long' ? 'pneumatic' : load === 'heavy' || frequency === 'daily' || distance === 'medium' ? 'locking' : 'swivel',
-    shelf: load === 'heavy' ? 'cargo' : frequency === 'rare' ? 'single' : 'double',
-    net: 'none',
-    ramp: load === 'heavy' ? 'included' : 'none',
-    height: 'auto'
+    build: { ...layout, material, wheel, height },
+    reasons: [reason, wheelReasons[wheel]]
   };
 }
+
 byId('guided').addEventListener('submit', event => {
   event.preventDefault();
-  const answers = new FormData(event.currentTarget);
-  const build = recommend(answers.get('distance'), answers.get('load'), answers.get('frequency'));
+  const answers = Object.fromEntries(new FormData(event.currentTarget));
+  const recommendation = recommend(answers);
   const result = byId('recommendation');
-  result.hidden = false;
-  byId('edit').hidden = !build;
-  if (!build) {
+  if (!recommendation) {
     result.textContent = 'Loads above 300 lb are outside this concept’s load targets. Your current build is still shown in the preview.';
-    return;
+  } else {
+    Object.assign(state, recommendation.build);
+    render();
+    result.textContent = 'Recommendation applied. ' + recommendation.reasons.join(' ');
   }
-  Object.assign(state, build);
-  render();
-  result.textContent = 'Recommended build applied. ' + selected('material').name + ' frame with ' + selected('wheel').name.toLowerCase() + ' and ' + ({
-    cargo: 'an open cargo deck and loading ramp for bulky equipment.',
-    single: 'one shelf to leave room on the lower deck.',
-    double: 'two shelves to keep equipment organized between trips.'
-  })[state.shelf];
+  result.hidden = false;
+  byId('edit').hidden = !recommendation;
 });
 const canvas = byId('cart');
 const ctx = canvas.getContext('2d');
-let angle = .62;
+const rotation = byId('rotation');
+const rotationAngle = byId('rotation-angle');
+let angle = Number(rotation.value) * Math.PI / 180;
 let boxOut = false;
 let boxExtension = 0;
 let slideAnimation;
@@ -161,10 +181,13 @@ function overallHeight() {
     ? selected('shelf').height + (state.wheel === 'pneumatic' ? 3 : 0)
     : Number(state.height);
 }
-byId('rotate').onclick = () => {
-  angle += Math.PI / 4;
+rotation.addEventListener('input', () => {
+  const degrees = Number(rotation.value);
+  angle = degrees * Math.PI / 180;
+  rotationAngle.textContent = degrees + '°';
+  rotation.setAttribute('aria-valuetext', degrees + ' degrees');
   draw();
-};
+});
 function render() {
   for (const control of byId('choices').querySelectorAll('input')) {
     control.checked = state[control.name] === control.value;
@@ -206,10 +229,10 @@ function draw() {
   glow.addColorStop(1, '#10261f');
   ctx.fillStyle = glow;
   ctx.fillRect(0, 0, width, height);
-  const scale = Math.min(width / 4.7, (height - 98) / 3.8);
+  const scale = Math.min(width / 4.7, (height - 116) / 3.8);
   const c = Math.cos(angle);
   const s = Math.sin(angle);
-  const project = ([x,y,z]) => [width / 2 + scale * (c*x-s*z), height/2 + scale * (.43*(s*x+c*z)-.90*(y-1.15))];
+  const project = ([x,y,z]) => [width / 2 + scale * (c*x-s*z), height/2 - 12 + scale * (.43*(s*x+c*z)-.90*(y-1.15))];
   const depth = ([x,y,z]) => .90*(s*x+c*z)+.43*y;
   function line(a, b) {
     ctx.beginPath();

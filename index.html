@@ -3,29 +3,44 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Configure a mobile storage cart for the ME553 design project.">
-<title>Cart Workshop | ME553</title>
+<meta name="description" content="Configure a Super Mover cart for the equipment you move.">
+<title>Super Mover | ME553</title>
 <link rel="stylesheet" href="style.css">
 <script defer src="app.js"></script>
 </head>
 <body>
-<header><div class="bar"><a class="brand" href="./"><span class="mark" aria-hidden="true">▦</span> Cart<span>Workshop</span></a><span class="project">ME553 <i></i> TEAM 3</span></div></header>
+<header><div class="bar"><a class="brand" href="./"><span class="mark" aria-hidden="true">▦</span> Super<span>Mover</span></a><span class="project">ME553 <i></i> TEAM 3</span></div></header>
 <main>
-<div class="intro"><p class="eyebrow">MOBILE STORAGE CONFIGURATOR</p><h1>Build your cart<span>.</span></h1><p>Set up a storage cart around the equipment you move.</p></div>
+<div class="intro"><p class="eyebrow">MOBILE STORAGE CONFIGURATOR</p><h1>Super Mover<span>.</span></h1><p>We build the cart to suit your needs.</p></div>
 <div class="workspace">
 <section class="preview" aria-labelledby="preview-title">
-<div class="preview-head"><h2 id="preview-title">Cart preview</h2><div class="preview-actions"><button type="button" id="slide" class="light" aria-pressed="false" hidden>Slide box out</button><button type="button" id="rotate" class="light">Rotate view</button></div></div>
+<div class="preview-head"><h2 id="preview-title">Cart preview</h2><div class="preview-actions"><button type="button" id="slide" class="light" aria-pressed="false" hidden>Slide box out</button></div></div>
 <canvas id="cart" role="img" aria-label="Isometric preview of the configured mobile storage cart"></canvas>
+<div class="rotation">
+<label for="rotation">Rotate cart</label>
+<input id="rotation" type="range" min="0" max="360" step="1" value="36" aria-valuetext="36 degrees">
+<span id="rotation-angle" aria-hidden="true">36°</span>
+</div>
 <div class="preview-foot"><span id="finish"></span><span>Illustrative model</span></div>
 </section>
 <section class="config" aria-label="Cart configuration">
 <div class="switch" aria-label="Configuration mode"><button id="manual-tab" aria-pressed="true" type="button">Build manually</button><button id="guided-tab" aria-pressed="false" type="button">Get a recommendation</button></div>
 <section id="manual"><h2>Configure your cart</h2><div id="choices"></div><label class="height-control" for="height">Overall height</label><select id="height"><option value="auto">Automatic for shelf layout</option><option value="42">42 in</option><option value="48">48 in</option><option value="54">54 in</option><option value="60">60 in</option></select></section>
 <form id="guided" hidden>
-<h2>Tell us what you move</h2>
-<label>How far do you move equipment?<select name="distance" required><option value="">Select a distance</option><option value="short">Within a room</option><option value="medium">Across a building</option><option value="long">Between buildings</option></select></label>
-<label>How much equipment do you move?<select name="load" required><option value="">Select a typical load</option><option value="light">Up to 100 lb</option><option value="medium">101–200 lb</option><option value="heavy">201–300 lb</option><option value="over">More than 300 lb</option></select></label>
-<label>How often do you move it?<select name="frequency" required><option value="">Select a frequency</option><option value="rare">Occasionally</option><option value="weekly">Weekly</option><option value="daily">Daily</option></select></label>
+<h2>Find your Super Mover</h2>
+<p class="guided-intro">Tell us what you haul and where it goes. You can fine-tune the suggested build.</p>
+<div class="guided-questions">
+<label>What do you move most?
+<select name="cargo" required><option value="">Select your cargo</option><option value="bins">Stackable boxes or bins</option><option value="loose">Loose tools and supplies</option><option value="bulky">Bulky equipment</option><option value="wheeled">Equipment on wheels</option><option value="mixed">A mix of equipment and supplies</option></select></label>
+<label>How heavy is your typical load?
+<select name="load" required><option value="">Select a weight range</option><option value="light">Up to 100 lb</option><option value="medium">101–200 lb</option><option value="heavy">201–300 lb</option><option value="over">More than 300 lb</option></select></label>
+<label>Where do you roll the cart?
+<select name="surface" required><option value="">Select a route</option><option value="tight">Tight indoor spaces</option><option value="indoor">Smooth hallways and floors</option><option value="outdoor">Uneven pavement or outdoor paths</option></select></label>
+<label>How often do you move it?
+<select name="frequency" required><option value="">Select a frequency</option><option value="rare">Occasionally</option><option value="weekly">Weekly</option><option value="daily">Daily</option></select></label>
+<label>What matters most for height? <span class="optional">(optional)</span>
+<select name="height"><option value="auto">Let the layout decide</option><option value="42">Keep it low · 42 in</option><option value="48">Keep shelves within reach · 48 in</option><option value="60">Make room for taller storage · 60 in</option></select></label>
+</div>
 <button class="primary" type="submit">Recommend a build</button>
 <p id="recommendation" aria-live="polite" hidden></p>
 <button class="light" id="edit" type="button" hidden>Edit this build</button>
